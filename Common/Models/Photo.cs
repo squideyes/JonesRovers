@@ -13,11 +13,9 @@ namespace Common;
 
 public class Photo
 {
-    public Manifest? Manifest { get; init; }
     public int PhotoId { get; init; }
     public Rover Rover { get; init; }
-    public DateTime EarthDate { get; init; }
-    public int Sol { get; init; }
+    public DateOnly Date { get; init; }
     public Camera Camera { get; init; }
     public Uri? ImageUri { get; init; }
 
@@ -27,7 +25,7 @@ public class Photo
 
         sb.Append(Rover.ToString().ToUpper());
         sb.Append('-');
-        sb.Append(EarthDate.ToString("yyyyMMdd"));
+        sb.Append(Date.ToString("yyyyMMdd"));
         sb.Append('-');
         sb.Append(Camera.ToCode());
         sb.Append('-');
@@ -43,7 +41,7 @@ public class Photo
 
         sb.Append(Rover.ToString().ToUpper());
         sb.Append('/');
-        sb.Append(EarthDate.ToString("yyyy"));
+        sb.Append(Date.ToString("yyyy"));
         sb.Append('/');
         sb.Append(Camera.ToCode());
         sb.Append('/');

@@ -114,8 +114,8 @@ namespace BackEnd
             return manifests.ToList();
         }
 
-        public async Task<List<Photo>> GetPhotos(
-            Manifest manifest, Camera? cameraFilter = null)
+        public async Task<List<Photo>> GetPhotosAsync(
+            Manifest manifest, Camera? camera = null)
         {
             if (manifest == null)
                 throw new ArgumentNullException(nameof(manifest));
@@ -127,8 +127,8 @@ namespace BackEnd
             url.Append("/photos?earth_date=");
             url.Append(manifest.Date.ToString("yyyy-MM-dd"));
 
-            if (cameraFilter.HasValue)
-                url.Append($"camera={cameraFilter.Value.ToCode()}");
+            if (camera.HasValue)
+                url.Append($"&camera={camera.Value.ToCode()}");
 
             url.Append($"&api_key={key}");
 

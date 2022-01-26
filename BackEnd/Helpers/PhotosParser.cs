@@ -24,7 +24,6 @@ namespace BackEnd
         private class PhotoInfo
         {
             public int Id { get; init; }
-            public int Sol { get; init; }
             public CameraInfo Camera { get; init; }
             public string Img_Src { get; init; }
             public string Earth_Date { get; init; }
@@ -50,9 +49,9 @@ namespace BackEnd
             {
                 photos.Add(new Photo()
                 {
+                    Rover = manifest.Rover,
+                    Date = manifest.Date,
                     PhotoId = photoInfo.Id,
-                    Manifest = manifest,
-                    Sol = photoInfo.Sol,
                     ImageUri = new Uri(photoInfo.Img_Src),
                     Camera = photoInfo.Camera.Name.ToCamera()
                 });

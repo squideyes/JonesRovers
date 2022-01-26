@@ -36,10 +36,6 @@ public class Connector
         public DateTime Next { get; set; }
         public DateTime LastUpdated { get; set; }
     }
-    private class IdOnly
-    {
-        public string Id { get; init; }
-    }
 
     private readonly ILogger logger;
     private readonly Container container;
@@ -87,11 +83,11 @@ public class Connector
         }
     }
 
-    [Function("GetManifest")]
-    public async Task<HttpResponseData> GetManifestAsync(
+    [Function("GetPhotos")]
+    public async Task<HttpResponseData> GetPhotosAsync(
         [HttpTrigger(AuthorizationLevel.Function, "get",
-        Route = "GetManifest/{rover}/{date}")] HttpRequestData request,
-        string rover, string date)
+        Route = "GetPhotos/{rover}/{date}/{camera?}")] HttpRequestData request,
+        string rover, string date, string camera)
     {
         HttpResponseData BadRequest(string name, string kind)
         {
@@ -110,16 +106,27 @@ public class Connector
         if (!DateOnly.TryParse(date, out DateOnly d))
             return BadRequest(nameof(date), nameof(DateOnly));
 
+        var hasCamera = !string.IsNullOrWhiteSpace(camera);
+
+        Camera c = default;
+
+        if (hasCamera && !Enum.TryParse(camera, out c))
+            return BadRequest(nameof(camera), nameof(Camera));
+
         HttpResponseData response = null;
 
         var id = Manifest.GetId(r, d);
 
-        string CouldNotBeRead() => $"The {id} manifest could not be read ";
+        string CouldNotBeRead() =>
+            $"The {r}/{d:MM-dd-yyyy} photos could not be retrieved ";
 
         try
         {
             var item = await container.ReadItemAsync<Manifest>(
                 id, new PartitionKey(r.ToString()));
+
+            var photos = await client.GetPhotosAsync(
+                item.Resource, hasCamera ? c : null);
 
             response = request.CreateResponse(HttpStatusCode.OK);
 
@@ -129,7 +136,7 @@ public class Connector
             if (item.StatusCode == HttpStatusCode.OK)
             {
                 response.WriteString(JsonSerializer.Serialize(
-                    item.Resource, JsonHelper.GetJsonSerializerOptions()));
+                    photos, JsonHelper.GetJsonSerializerOptions()));
             }
             else
             {

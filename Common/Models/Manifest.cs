@@ -7,15 +7,12 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using System.Text.Json.Serialization;
-
 namespace Common;
 
 public class Manifest
 {
     public Rover Rover { get; init; }
     public DateOnly Date { get; init; }
-    public int Sol { get; init; }
     public int Photos { get; init; }
     public List<Camera>? Cameras { get; init; }
 

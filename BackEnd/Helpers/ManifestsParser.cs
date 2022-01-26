@@ -36,7 +36,6 @@ public static class ManifestParser
 
     private class PhotoInfo
     {
-        public int Sol { get; set; }
         public string Earth_date { get; set; }
         public int Total_Photos { get; set; }
         public string[] Cameras { get; set; }
@@ -60,7 +59,6 @@ public static class ManifestParser
                 Rover = Enum.Parse<Rover>(root.Photo_Manifest.Name, true),
                 Cameras = photo.Cameras.Select(c => c.ToCamera()).ToList(),
                 Date = DateOnly.FromDateTime(DateTime.Parse(photo.Earth_date)),
-                Sol = photo.Sol,
                 Photos = photo.Total_Photos
             });
         }
