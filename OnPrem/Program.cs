@@ -1,35 +1,23 @@
-// ********************************************************
-// Copyright (C) 2022 Louis S. Berman (louis@squideyes.com)
-//
-// This file is part of JonesRovers
-//
-// The use of this source code is licensed under the terms
-// of the MIT License (https://opensource.org/licenses/MIT)
-// ********************************************************
+using OnPrem;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using static OnPrem.HeadsOrTails;
 
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
+var builder = WebApplication.CreateBuilder(args);
 
-namespace OnPrem;
+var app = builder.Build();
 
-public class Program
+var random = new Random();
+
+var result = new CoinTossResult()
 {
-    public static void Main()
-    {
-        var host = new HostBuilder()
-            .ConfigureAppConfiguration((c, b) =>
-            {
-                if (c.HostingEnvironment.IsDevelopment())
-                    b.AddUserSecrets<Program>();
-            })
-            .ConfigureFunctionsWorkerDefaults((c, b) =>
-            {
-            })
-            .ConfigureServices((c, s) =>
-            {
-            })
-            .Build();
+    HeadsOrTails = random.Next(2) == 1 ? Heads : Tails
+};
 
-        host.Run();
-    }
-}
+var options = new JsonSerializerOptions();
+
+options.Converters.Add(new JsonStringEnumConverter());
+
+app.MapGet("/CoinToss", () => Results.Json(result, options));
+
+app.Run();
