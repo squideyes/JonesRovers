@@ -7,6 +7,7 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using Common;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

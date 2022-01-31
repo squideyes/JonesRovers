@@ -1,0 +1,31 @@
+﻿@using Common
+@inject CosmosRepository cosmos
+
+<h3>Mars Rover Photos</h3>
+
+@code {
+    List<Rover> rovers = new();
+    Rover rover;
+    DateTime? minDate;
+    DateTime? maxDate;
+    DateTime? date;
+
+    SortedDictionary<Rover, (DateOnly MinDate, DateOnly MaxDate)>? minMax;
+
+    protected override async Task OnInitializedAsync()
+    {
+        minMax = await cosmos.GetRoverMinMaxAsync();
+
+        rovers = minMax!.Keys.ToList();
+
+        OnSelectedValuesChanged(new List<Rover>() { rovers.First() });
+    }
+
+    void OnSelectedValuesChanged(IEnumerable<Rover> values)
+    {
+        rover = values.First();
+        minDate = minMax![rover].MinDate.ToDateTime(TimeOnly.MinValue);
+        maxDate = minMax![rover].MaxDate.ToDateTime(TimeOnly.MinValue);
+        date = maxDate;
+    }
+}

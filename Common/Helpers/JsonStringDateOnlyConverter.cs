@@ -7,12 +7,11 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using System;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BackEnd
+namespace Common
 {
     public class JsonStringDateOnlyConverter : JsonConverter<DateOnly>
     {

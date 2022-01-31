@@ -10,11 +10,11 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BackEnd;
+namespace Common;
 
-internal static class JsonHelper
+public static class JsonHelper
 {
-    private static JsonSerializerOptions options = null;
+    private static JsonSerializerOptions options = null!;
 
     public static JsonSerializerOptions GetJsonSerializerOptions()
     {
